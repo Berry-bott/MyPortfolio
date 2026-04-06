@@ -13,7 +13,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Dev.AI - Web Development & AI Automation',
+  title: 'HENRY.CODE - Web Development & AI Automation',
   description: 'Professional portfolio showcasing web development projects and AI automation solutions',
   generator: 'v0.app',
   icons: {

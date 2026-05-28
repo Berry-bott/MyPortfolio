@@ -29,8 +29,11 @@ export async function POST(request: NextRequest) {
       .select()
 
     if (error) {
-      // Silently continue - Supabase may not be configured in development
-      // Lead is still logged below for debugging
+      console.error('[v0] Supabase error inserting lead:', error)
+      return NextResponse.json(
+        { error: 'Failed to save lead to database' },
+        { status: 500 }
+      )
     }
 
     const leadId = lead?.[0]?.id || `mock_${Date.now()}`

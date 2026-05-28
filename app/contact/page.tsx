@@ -29,14 +29,14 @@ export default function Contact() {
               {
                 icon: Mail,
                 title: 'Email',
-                content: 'contact@dev-ai.com',
-                link: 'mailto:contact@dev-ai.com',
+                content: 'nicholashnerry@gmail.com',
+                link: 'mailto:nicholashnerry@gmail.com',
               },
               {
                 icon: Phone,
                 title: 'Phone',
-                content: '+1 (555) 123-4567',
-                link: 'tel:+15551234567',
+                content: '+234 9013829912',
+                link: 'tel:+234 9013829912',
               },
               {
                 icon: MapPin,

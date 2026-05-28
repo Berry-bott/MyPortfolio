@@ -202,7 +202,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <h2 className="text-3xl font-bold mb-12">Related Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(projects)
-              .filter(([slug]) => slug !== params.slug)
+              .filter(([projectSlug]) => projectSlug !== slug)
               .slice(0, 2)
               .map(([slug, proj]) => (
                 <Link

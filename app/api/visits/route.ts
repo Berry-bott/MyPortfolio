@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase/server'
 
+type VisitRow = {
+  page_path: string
+  referrer?: string | null
+  duration_seconds?: number | null
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
@@ -67,17 +73,19 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate analytics
-    const totalVisits = visits?.length || 0
-    const avgDuration = visits && visits.length > 0
-      ? Math.round(visits.reduce((sum, v) => sum + (v.duration_seconds || 0), 0) / visits.length)
+    const typedVisits = (visits || []) as VisitRow[]
+    const totalVisits = typedVisits.length
+    const avgDuration = typedVisits.length > 0
+      ? Math.round(typedVisits.reduce((sum: number, v: VisitRow) => sum + (v.duration_seconds || 0), 0) / typedVisits.length)
       : 0
 
     const pageViews: Record<string, number> = {}
     const referrers: Record<string, number> = {}
 
-    visits?.forEach((v) => {
+    typedVisits.forEach((v: VisitRow) => {
       pageViews[v.page_path] = (pageViews[v.page_path] || 0) + 1
-      referrers[v.referrer] = (referrers[v.referrer] || 0) + 1
+      const referrer = v.referrer || 'direct'
+      referrers[referrer] = (referrers[referrer] || 0) + 1
     })
 
     return NextResponse.json({
@@ -86,7 +94,7 @@ export async function GET(request: NextRequest) {
       avgDuration,
       pageViews,
       referrers,
-      recentVisits: visits,
+      recentVisits: typedVisits,
     })
   } catch (error) {
     console.error('[v0] Error in GET visits:', error)

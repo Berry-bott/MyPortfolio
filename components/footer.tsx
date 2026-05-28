@@ -12,7 +12,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold text-primary mb-4">Dev.AI</h3>
+            <h3 className="text-lg font-bold text-primary mb-4">HENRY.CODE</h3>
             <p className="text-sm text-muted-foreground">
               Web Development & AI Automation Solutions
             </p>
@@ -66,7 +66,7 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Connect</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://github.com/Berry-bott" className="text-muted-foreground hover:text-primary transition-colors">
                 <Github size={20} />
               </a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
@@ -75,7 +75,7 @@ export function Footer() {
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="nicholasherry@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
                 <Mail size={20} />
               </a>
             </div>

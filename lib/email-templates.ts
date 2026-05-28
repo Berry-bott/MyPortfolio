@@ -17,7 +17,7 @@ export const emailTemplates = {
   }),
 
   leadQualification: (name: string) => ({
-    subject: 'Let's discuss your project - Dev.AI',
+    subject: "Let's discuss your project - Dev.AI",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1e3a8a;">Hi ${name},</h2>

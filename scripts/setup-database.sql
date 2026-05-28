@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS automation_workflows (
 -- Create automation_logs table
 CREATE TABLE IF NOT EXISTS automation_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  workflow_id UUID NOT NULL REFERENCES automation_workflows(id) ON DELETE CASCADE,
+  workflow_id UUID REFERENCES automation_workflows(id) ON DELETE SET NULL,
   event_type VARCHAR(100) NOT NULL,
   event_data JSONB,
   status VARCHAR(50),
@@ -112,3 +112,6 @@ CREATE POLICY "allow_all_workflows" ON automation_workflows FOR ALL USING (true)
 CREATE POLICY "allow_all_logs" ON automation_logs FOR ALL USING (true);
 CREATE POLICY "allow_all_jobs" ON jobs FOR ALL USING (true);
 CREATE POLICY "allow_all_messages" ON messages FOR ALL USING (true);
+
+-- Keep older installations compatible with the current API.
+ALTER TABLE automation_logs ALTER COLUMN workflow_id DROP NOT NULL;

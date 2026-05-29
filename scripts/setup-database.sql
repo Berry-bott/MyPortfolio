@@ -105,6 +105,14 @@ ALTER TABLE automation_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE jobs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies so this file can be run more than once.
+DROP POLICY IF EXISTS "allow_all_leads" ON leads;
+DROP POLICY IF EXISTS "allow_all_visits" ON visits;
+DROP POLICY IF EXISTS "allow_all_workflows" ON automation_workflows;
+DROP POLICY IF EXISTS "allow_all_logs" ON automation_logs;
+DROP POLICY IF EXISTS "allow_all_jobs" ON jobs;
+DROP POLICY IF EXISTS "allow_all_messages" ON messages;
+
 -- Create RLS policies (allow all operations for now - secure based on your auth needs)
 CREATE POLICY "allow_all_leads" ON leads FOR ALL USING (true);
 CREATE POLICY "allow_all_visits" ON visits FOR ALL USING (true);

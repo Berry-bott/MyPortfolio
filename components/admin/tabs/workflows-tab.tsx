@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Play, Plus, Trash2, CheckCircle2 } from 'lucide-react'
 import {
   Table,
@@ -26,6 +27,8 @@ interface Workflow {
 export function WorkflowsTab() {
   const [workflows, setWorkflows] = useState<Workflow[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [newWorkflow, setNewWorkflow] = useState({
     name: '',
@@ -38,11 +41,22 @@ export function WorkflowsTab() {
   }, [])
 
   const fetchWorkflows = async () => {
+    setLoading(true)
+    setError(null)
+
     try {
       const res = await fetch('/api/workflows')
       const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to fetch workflows')
+      }
+
       setWorkflows(data.workflows || [])
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch workflows'
+      setError(message)
+      setWorkflows([])
       console.error('[v0] Error fetching workflows:', error)
     } finally {
       setLoading(false)
@@ -51,6 +65,8 @@ export function WorkflowsTab() {
 
   const handleCreateWorkflow = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
+    setSuccess(null)
     
     try {
       const res = await fetch('/api/workflows', {
@@ -61,18 +77,27 @@ export function WorkflowsTab() {
           actions: newWorkflow.actions.length > 0 ? newWorkflow.actions : [{ type: 'notification', config: {} }],
         }),
       })
+      const data = await res.json()
 
-      if (res.ok) {
-        setNewWorkflow({ name: '', trigger_type: 'lead_created', actions: [] })
-        setShowCreate(false)
-        fetchWorkflows()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create workflow')
       }
+
+      setNewWorkflow({ name: '', trigger_type: 'lead_created', actions: [] })
+      setShowCreate(false)
+      setSuccess('Workflow created successfully.')
+      fetchWorkflows()
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create workflow'
+      setError(message)
       console.error('[v0] Error creating workflow:', error)
     }
   }
 
   const handleExecuteWorkflow = async (workflowId: string) => {
+    setError(null)
+    setSuccess(null)
+
     try {
       const res = await fetch('/api/workflows/execute', {
         method: 'POST',
@@ -82,28 +107,65 @@ export function WorkflowsTab() {
           triggerData: { manual: true },
         }),
       })
+      const data = await res.json()
 
-      if (res.ok) {
-        alert('Workflow executed successfully!')
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to execute workflow')
       }
+
+      setSuccess('Workflow executed successfully.')
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to execute workflow'
+      setError(message)
       console.error('[v0] Error executing workflow:', error)
     }
   }
 
   const handleToggleActive = async (workflow: Workflow) => {
+    setError(null)
+    setSuccess(null)
+
     try {
       const res = await fetch(`/api/workflows?id=${workflow.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_active: !workflow.is_active }),
       })
+      const data = await res.json()
 
-      if (res.ok) {
-        fetchWorkflows()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update workflow')
       }
+
+      fetchWorkflows()
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update workflow'
+      setError(message)
       console.error('[v0] Error toggling workflow:', error)
+    }
+  }
+
+  const handleDeleteWorkflow = async (workflowId: string) => {
+    if (!window.confirm('Delete this workflow?')) return
+
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const res = await fetch(`/api/workflows?id=${workflowId}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete workflow')
+      }
+
+      setSuccess('Workflow deleted successfully.')
+      fetchWorkflows()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete workflow'
+      setError(message)
     }
   }
 
@@ -116,6 +178,18 @@ export function WorkflowsTab() {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
+
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Automation Workflows</h3>
         <Button onClick={() => setShowCreate(!showCreate)} className="gap-2">
@@ -230,7 +304,12 @@ export function WorkflowsTab() {
                       >
                         <Play className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-red-500 hover:text-red-600">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeleteWorkflow(workflow.id)}
+                        className="text-red-500 hover:text-red-600"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>

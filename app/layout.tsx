@@ -7,7 +7,6 @@ import { TrackingProvider } from '@/components/tracking-provider'
 import { PageTransition } from '@/components/page-transition'
 import { ScrollAnimations } from '@/components/scroll-animations'
 import { InteractiveAnimations } from '@/components/interactive-animations'
-import { SiteLoader } from '@/components/site-loader'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -44,7 +43,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
-        <SiteLoader />
         <TrackingProvider>
           <PageTransition />
           <ScrollAnimations />

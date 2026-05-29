@@ -27,8 +27,11 @@ export async function POST(request: NextRequest) {
     })
 
     if (error) {
-      // Silently continue - Supabase may not be configured in development
-      // The visit is still logged below for debugging
+      console.error('[v0] Supabase error inserting visit:', error)
+      return NextResponse.json(
+        { error: 'Failed to save visit to database' },
+        { status: 500 }
+      )
     }
 
     // Log visit event

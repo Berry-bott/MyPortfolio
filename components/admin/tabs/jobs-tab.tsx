@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Edit2, Trash2, ExternalLink } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Trash2, ExternalLink } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -40,12 +41,16 @@ export function JobsTab() {
   const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [priorityFilter, setPriorityFilter] = useState<string>('all')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchJobs()
   }, [statusFilter, priorityFilter])
 
   const fetchJobs = async () => {
+    setLoading(true)
+    setError(null)
+
     try {
       const params = new URLSearchParams()
       if (statusFilter !== 'all') params.append('status', statusFilter)
@@ -53,12 +58,65 @@ export function JobsTab() {
 
       const res = await fetch(`/api/jobs?${params.toString()}`)
       const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to fetch jobs')
+      }
+
       setJobs(data.jobs || [])
       setStats(data.stats || { total: 0, byStatus: {}, byPriority: {} })
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch jobs'
+      setError(message)
+      setJobs([])
+      setStats({ total: 0, byStatus: {}, byPriority: {} })
       console.error('[v0] Error fetching jobs:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const updateJob = async (jobId: string, updates: Partial<Job>) => {
+    setError(null)
+
+    try {
+      const res = await fetch(`/api/jobs?id=${jobId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update job')
+      }
+
+      await fetchJobs()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update job'
+      setError(message)
+    }
+  }
+
+  const deleteJob = async (jobId: string) => {
+    if (!window.confirm('Delete this job?')) return
+
+    setError(null)
+
+    try {
+      const res = await fetch(`/api/jobs?id=${jobId}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete job')
+      }
+
+      await fetchJobs()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete job'
+      setError(message)
     }
   }
 
@@ -84,6 +142,12 @@ export function JobsTab() {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 border border-border">
@@ -166,22 +230,32 @@ export function JobsTab() {
                   <TableCell className="text-sm text-muted-foreground">{job.company || '-'}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{job.location || '-'}</TableCell>
                   <TableCell>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getPriorityColor(
+                    <select
+                      value={job.priority}
+                      onChange={(e) => updateJob(job.id, { priority: e.target.value })}
+                      className={`px-3 py-1 rounded-full text-xs font-medium capitalize bg-transparent border border-border ${getPriorityColor(
                         job.priority
                       )}`}
                     >
-                      {job.priority}
-                    </span>
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
                   </TableCell>
                   <TableCell>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(
+                    <select
+                      value={job.status}
+                      onChange={(e) => updateJob(job.id, { status: e.target.value })}
+                      className={`px-3 py-1 rounded-full text-xs font-medium capitalize bg-transparent border border-border ${getStatusColor(
                         job.status
                       )}`}
                     >
-                      {job.status}
-                    </span>
+                      <option value="saved">Saved</option>
+                      <option value="applied">Applied</option>
+                      <option value="interviewed">Interviewed</option>
+                      <option value="offered">Offered</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(job.created_at).toLocaleDateString()}
@@ -200,10 +274,12 @@ export function JobsTab() {
                           </a>
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" className="text-blue-500 hover:text-blue-600">
-                        <Edit2 className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="text-red-500 hover:text-red-600">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onClick={() => deleteJob(job.id)}
+                      >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>

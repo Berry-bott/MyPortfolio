@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Mail, Users, Eye, TrendingUp, Zap, Briefcase } from 'lucide-react'
 import { LeadsTab } from './tabs/leads-tab'
 import { VisitsTab } from './tabs/visits-tab'
@@ -17,9 +18,12 @@ export function AdminDashboard() {
     conversionRate: 0,
   })
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMetrics = async () => {
+      setError(null)
+
       try {
         const [leadsRes, visitsRes] = await Promise.all([
           fetch('/api/leads'),
@@ -28,6 +32,14 @@ export function AdminDashboard() {
 
         const leadsData = await leadsRes.json()
         const visitsData = await visitsRes.json()
+
+        if (!leadsRes.ok) {
+          throw new Error(leadsData.error || 'Failed to fetch leads')
+        }
+
+        if (!visitsRes.ok) {
+          throw new Error(visitsData.error || 'Failed to fetch visits')
+        }
 
         const leads = leadsData.leads || []
         const visits = visitsData.recentVisits || []
@@ -42,6 +54,8 @@ export function AdminDashboard() {
           conversionRate,
         })
       } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch dashboard metrics'
+        setError(message)
         console.error('[v0] Error fetching metrics:', error)
       } finally {
         setLoading(false)
@@ -97,6 +111,12 @@ export function AdminDashboard() {
 
       {/* Metrics */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {statsCards.map((card) => (
             <MetricsCard key={card.title} {...card} loading={loading} />

@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       { 
         success: true, 
         message: 'Job added successfully',
-        jobId: job.id 
+        jobId: job?.[0]?.id
       },
       { status: 201 }
     )
@@ -170,6 +170,43 @@ export async function PATCH(request: NextRequest) {
     console.error('[v0] Error updating job:', error)
     return NextResponse.json(
       { error: 'Failed to update job' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const jobId = request.nextUrl.searchParams.get('id')
+
+    if (!jobId) {
+      return NextResponse.json(
+        { error: 'Job ID is required' },
+        { status: 400 }
+      )
+    }
+
+    const { error } = await supabaseServer
+      .from('jobs')
+      .delete()
+      .eq('id', jobId)
+
+    if (error) {
+      console.error('[v0] Supabase error deleting job:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete job' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Job deleted successfully',
+    })
+  } catch (error) {
+    console.error('[v0] Error deleting job:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete job' },
       { status: 500 }
     )
   }

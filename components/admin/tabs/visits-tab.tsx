@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Table,
   TableBody,
@@ -37,12 +38,20 @@ export function VisitsTab() {
     avgDuration: 0,
   })
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchVisits = async () => {
+      setError(null)
+
       try {
         const res = await fetch('/api/visits')
         const visitData = await res.json()
+
+        if (!res.ok) {
+          throw new Error(visitData.error || 'Failed to fetch visits')
+        }
+
         setData({
           recentVisits: visitData.recentVisits || [],
           pageViews: visitData.pageViews || {},
@@ -50,6 +59,14 @@ export function VisitsTab() {
           avgDuration: visitData.avgDuration || 0,
         })
       } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to fetch visits'
+        setError(message)
+        setData({
+          recentVisits: [],
+          pageViews: {},
+          referrers: {},
+          avgDuration: 0,
+        })
         console.error('[v0] Error fetching visits:', error)
       } finally {
         setLoading(false)
@@ -74,6 +91,12 @@ export function VisitsTab() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {error && (
+        <Alert variant="destructive" className="lg:col-span-3">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       {/* Page Views Chart */}
       <Card className="lg:col-span-2 border border-border p-6">
         <h3 className="text-lg font-semibold mb-4">Page Views</h3>

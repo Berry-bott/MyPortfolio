@@ -1,36 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// Mock message queue - in production, integrate with email service
-const messageQueue: any[] = []
+import { supabaseServer } from '@/lib/supabase/server'
+import { getEmailTemplate } from '@/lib/email-templates'
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
-    if (!data.email || !data.subject) {
+    if (!data.email) {
       return NextResponse.json(
-        { error: 'Email and subject are required' },
+        { error: 'Email is required' },
         { status: 400 }
       )
     }
 
-    // Create auto-response record
-    const response = {
-      id: Date.now().toString(),
-      sender_email: data.email,
-      subject: data.subject,
-      message: data.message || 'Thank you for your inquiry. I will get back to you shortly.',
-      type: data.type || 'inquiry',
-      auto_response_sent: true,
-      created_at: new Date().toISOString(),
-    }
+    const template = data.subject && data.message
+      ? { subject: data.subject, html: data.message }
+      : getEmailTemplate(data.type || 'contact', data)
 
-    messageQueue.push(response)
+    const { data: message, error } = await supabaseServer
+      .from('messages')
+      .insert({
+        from_email: 'noreply@henry-code.local',
+        from_name: 'HENRY.CODE',
+        to_email: data.email,
+        subject: data.subject || template.subject,
+        body: template.html,
+        message_type: data.type || 'contact',
+        status: 'logged',
+      })
+      .select()
+
+    if (error) {
+      console.error('[v0] Supabase error logging auto-response:', error)
+      return NextResponse.json(
+        { error: 'Failed to log auto-response' },
+        { status: 500 }
+      )
+    }
 
     // Log automation event
     console.log('[v0] Auto-response triggered:', {
-      email: response.sender_email,
-      type: response.type,
+      email: data.email,
+      type: data.type || 'contact',
       timestamp: new Date().toISOString(),
     })
 
@@ -44,8 +55,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         success: true, 
-        message: 'Auto-response sent successfully',
-        responseId: response.id 
+        message: 'Auto-response logged successfully',
+        responseId: message?.[0]?.id
       },
       { status: 201 }
     )
@@ -59,8 +70,31 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({
-    total: messageQueue.length,
-    recentResponses: messageQueue.slice(-20).reverse(),
-  })
+  try {
+    const { data: messages, error } = await supabaseServer
+      .from('messages')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (error) {
+      console.error('[v0] Error fetching messages:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch messages' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      total: messages?.length || 0,
+      messages: messages || [],
+    })
+  } catch (error) {
+    console.error('[v0] Error in GET auto-responses:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
 }

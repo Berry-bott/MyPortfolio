@@ -7,15 +7,41 @@ import { Button } from '@/components/ui/button'
 
 const projects = [
   {
-    id: 'ecommerce-platform',
-    title: 'E-Commerce Platform',
-    slug: 'ecommerce-platform',
+    id: 'gift-card-platform',
+    title: 'Gift Card Website',
+    slug: 'gift-card-platform',
     category: 'web-development',
-    short_description: 'Full-stack e-commerce solution with real-time inventory',
-    description: 'A comprehensive e-commerce platform built with Next.js and PostgreSQL. Features include product management, real-time inventory tracking, integrated payment processing with Stripe, user authentication, and order management.',
-    image: 'https://images.unsplash.com/photo-1460925895917-adf4e9651a80?w=800&q=80',
+    short_description: 'Full-stack gift card solution with real-time inventory',
+    description: 'A comprehensive gift card platform built with Next.js and PostgreSQL. Features include product management, real-time inventory tracking, integrated payment processing with Stripe, user authentication, and order management.',
+    image: '/project_one.png',
     technologies: ['Next.js', 'PostgreSQL', 'Stripe', 'Tailwind CSS', 'TypeScript'],
-    live_url: '#',
+    live_url: 'https://spin-object-95371433.figma.site/',
+    github_url: '#',
+    featured: true,
+  },
+    {
+    id: 'fintech',
+    title: 'Fintech App',
+    slug: 'fintech-app',
+    category: 'web-development',
+    short_description: 'React Native app with offline capabilities',
+    description: 'A cross-platform application built with React, React Native and Expo. Features offline-first architecture, push notifications, real-time sync, and native module integration for iOS and Android platforms.',
+    image: '/pharste_project.png',
+    technologies: ['React', 'Expo','Express', 'neon', 'Redux', 'TypeScript'],
+    live_url: 'https://pharste-site.vercel.app',
+    github_url: '#',
+    featured: true,
+  },
+   {
+    id: 'cbt-web-app',
+    title: 'CBT Web App',
+    slug: 'cbt-web-app',
+    category: 'web-development',
+    short_description: 'React Native app with offline capabilities',
+    description: 'cbt web app is a cross-platform mobile application built with React and Express. It offers cognitive behavioral therapy (CBT) tools, mood tracking, and guided exercises. The app features offline capabilities, secure user authentication, and a clean, intuitive interface designed to support mental health and wellness.',
+    image: '/cbt_project.png',
+    technologies: ['React', 'Express', 'MongoDB', 'Redux', 'TypeScript'],
+    live_url: 'https://fillops-edu-tech.vercel.app/',
     github_url: '#',
     featured: true,
   },
@@ -30,7 +56,7 @@ const projects = [
     technologies: ['React', 'AI SDK', 'Recharts', 'Supabase', 'WebSockets'],
     live_url: '#',
     github_url: '#',
-    featured: true,
+    featured: false,
   },
   {
     id: 'automation-suite',
@@ -71,19 +97,8 @@ const projects = [
     github_url: '#',
     featured: false,
   },
-  {
-    id: 'mobile-app',
-    title: 'Cross-Platform Mobile App',
-    slug: 'mobile-app',
-    category: 'web-development',
-    short_description: 'React Native app with offline capabilities',
-    description: 'Cross-platform mobile application built with React Native and Expo. Features offline-first architecture, push notifications, real-time sync, and native module integration for iOS and Android platforms.',
-    image: 'https://images.unsplash.com/photo-1512941691920-25d18d400558?w=800&q=80',
-    technologies: ['React Native', 'Expo', 'Firebase', 'Redux', 'TypeScript'],
-    live_url: '#',
-    github_url: '#',
-    featured: false,
-  },
+ 
+
 ]
 
 const categories = [
@@ -171,7 +186,9 @@ export function ProjectsList() {
                 {project.live_url !== '#' && (
                   <a
                     href={project.live_url}
-                    onClick={e => e.preventDefault()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
                     className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
                   >
                     <ExternalLink size={16} />
@@ -181,23 +198,19 @@ export function ProjectsList() {
                 {project.github_url !== '#' && (
                   <a
                     href={project.github_url}
-                    onClick={e => e.preventDefault()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
                     className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
                   >
                     <Github size={16} />
                     Code
                   </a>
                 )}
-                <button
-                  onClick={e => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                  }}
-                  className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                >
+                <span className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary group-hover:text-primary/80 transition-colors">
                   <ArrowRight size={16} />
                   Details
-                </button>
+                </span>
               </div>
             </div>
           </Link>

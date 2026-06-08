@@ -119,18 +119,36 @@ async function executeAction(action: WorkflowAction, triggerData: any): Promise<
 }
 
 async function sendEmailAction(config: any, triggerData: any): Promise<any> {
-  // Mock email sending - replace with actual service (Resend, SendGrid, etc.)
-  console.log('[v0] Sending email:', {
-    to: config.recipient || triggerData.email,
-    subject: config.subject,
-    template: config.template,
-  })
+  const recipient = config.recipient || triggerData.email
+  const subject = config.subject || 'Workflow email'
+  const body = config.message || 'Workflow email action was triggered.'
 
-  // In production, integrate with Resend, SendGrid, or similar
+  if (!recipient) {
+    throw new Error('Recipient email is required for send_email action')
+  }
+
+  const { data: message, error } = await supabaseServer
+    .from('messages')
+    .insert({
+      from_email: 'noreply@henry-code.local',
+      from_name: 'HENRY.CODE Workflow',
+      to_email: recipient,
+      subject,
+      body,
+      message_type: 'workflow',
+      status: 'logged',
+    })
+    .select()
+
+  if (error) {
+    throw new Error(`Failed to log workflow email: ${error.message}`)
+  }
+
   return {
     type: 'email',
-    recipient: config.recipient || triggerData.email,
-    subject: config.subject,
+    recipient,
+    subject,
+    messageId: message?.[0]?.id,
     sent_at: new Date().toISOString(),
   }
 }

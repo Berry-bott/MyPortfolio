@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Trash2, ExternalLink } from 'lucide-react'
+import { Plus, Trash2, ExternalLink } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -42,6 +44,19 @@ export function JobsTab() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [priorityFilter, setPriorityFilter] = useState<string>('all')
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [showCreate, setShowCreate] = useState(false)
+  const [newJob, setNewJob] = useState({
+    title: '',
+    company: '',
+    location: '',
+    description: '',
+    source: 'manual',
+    priority: 'medium',
+    status: 'saved',
+    salaryRange: '',
+    jobUrl: '',
+  })
 
   useEffect(() => {
     fetchJobs()
@@ -78,6 +93,7 @@ export function JobsTab() {
 
   const updateJob = async (jobId: string, updates: Partial<Job>) => {
     setError(null)
+    setSuccess(null)
 
     try {
       const res = await fetch(`/api/jobs?id=${jobId}`, {
@@ -102,6 +118,7 @@ export function JobsTab() {
     if (!window.confirm('Delete this job?')) return
 
     setError(null)
+    setSuccess(null)
 
     try {
       const res = await fetch(`/api/jobs?id=${jobId}`, {
@@ -114,8 +131,46 @@ export function JobsTab() {
       }
 
       await fetchJobs()
+      setSuccess('Job deleted successfully.')
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to delete job'
+      setError(message)
+    }
+  }
+
+  const createJob = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newJob),
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create job')
+      }
+
+      setNewJob({
+        title: '',
+        company: '',
+        location: '',
+        description: '',
+        source: 'manual',
+        priority: 'medium',
+        status: 'saved',
+        salaryRange: '',
+        jobUrl: '',
+      })
+      setShowCreate(false)
+      setSuccess('Job created successfully.')
+      await fetchJobs()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create job'
       setError(message)
     }
   }
@@ -141,11 +196,120 @@ export function JobsTab() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+      )}
+
+      {success && (
+        <Alert>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
+
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-semibold">Jobs & Gigs</h3>
+          <p className="text-sm text-muted-foreground">Track freelance gigs, applications, and opportunities.</p>
+        </div>
+        <Button onClick={() => setShowCreate((value) => !value)} className="gap-2">
+          <Plus className="w-4 h-4" />
+          New Job
+        </Button>
+      </div>
+
+      {showCreate && (
+        <Card className="border border-primary/40 p-6">
+          <form onSubmit={createJob} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium">Title *</label>
+                <Input
+                  value={newJob.title}
+                  onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+                  placeholder="Frontend Developer Gig"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">Company / Client</label>
+                <Input
+                  value={newJob.company}
+                  onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
+                  placeholder="Client or company name"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">Location</label>
+                <Input
+                  value={newJob.location}
+                  onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
+                  placeholder="Remote, Lagos, etc."
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">Budget / Salary</label>
+                <Input
+                  value={newJob.salaryRange}
+                  onChange={(e) => setNewJob({ ...newJob, salaryRange: e.target.value })}
+                  placeholder="$1,000 - $3,000"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">Priority</label>
+                <select
+                  value={newJob.priority}
+                  onChange={(e) => setNewJob({ ...newJob, priority: e.target.value })}
+                  className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                >
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">Status</label>
+                <select
+                  value={newJob.status}
+                  onChange={(e) => setNewJob({ ...newJob, status: e.target.value })}
+                  className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                >
+                  <option value="saved">Saved</option>
+                  <option value="applied">Applied</option>
+                  <option value="interviewed">Interviewed</option>
+                  <option value="offered">Offered</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium">Job URL</label>
+                <Input
+                  value={newJob.jobUrl}
+                  onChange={(e) => setNewJob({ ...newJob, jobUrl: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium">Description *</label>
+                <Textarea
+                  value={newJob.description}
+                  onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
+                  placeholder="What is the opportunity about?"
+                  rows={4}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button type="submit" className="flex-1">Create Job</Button>
+              <Button type="button" variant="outline" onClick={() => setShowCreate(false)} className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Card>
       )}
 
       {/* Stats Overview */}
@@ -197,7 +361,7 @@ export function JobsTab() {
       </div>
 
       {/* Jobs Table */}
-      <Card className="border border-border overflow-hidden">
+      <Card className="min-w-0 overflow-hidden border border-border">
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">

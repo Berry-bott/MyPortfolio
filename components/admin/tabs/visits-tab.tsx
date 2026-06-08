@@ -90,7 +90,7 @@ export function VisitsTab() {
   }))
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-3">
       {error && (
         <Alert variant="destructive" className="lg:col-span-3">
           <AlertDescription>{error}</AlertDescription>
@@ -98,7 +98,7 @@ export function VisitsTab() {
       )}
 
       {/* Page Views Chart */}
-      <Card className="lg:col-span-2 border border-border p-6">
+      <Card className="min-w-0 overflow-hidden border border-border p-6 lg:col-span-2">
         <h3 className="text-lg font-semibold mb-4">Page Views</h3>
         {loading ? (
           <div className="h-80 flex items-center justify-center text-muted-foreground">
@@ -125,7 +125,7 @@ export function VisitsTab() {
       </Card>
 
       {/* Referrers Chart */}
-      <Card className="border border-border p-6">
+      <Card className="min-w-0 overflow-hidden border border-border p-6">
         <h3 className="text-lg font-semibold mb-4">Traffic Sources</h3>
         {loading ? (
           <div className="h-80 flex items-center justify-center text-muted-foreground">
@@ -161,7 +161,7 @@ export function VisitsTab() {
       </Card>
 
       {/* Recent Visits Table */}
-      <Card className="lg:col-span-3 border border-border overflow-hidden">
+      <Card className="min-w-0 overflow-hidden border border-border lg:col-span-3">
         <div className="p-6 border-b border-border">
           <h3 className="text-lg font-semibold">Recent Visits</h3>
         </div>

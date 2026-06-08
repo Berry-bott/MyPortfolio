@@ -17,6 +17,7 @@ export function ContactForm() {
 
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -29,6 +30,7 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
 
     try {
       // Send lead to API
@@ -45,7 +47,7 @@ export function ContactForm() {
       }
 
       // Also trigger auto-response
-      await fetch('/api/auto-responses', {
+      const autoResponse = await fetch('/api/auto-responses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,8 +59,14 @@ export function ContactForm() {
           service: formData.service,
           inquiryMessage: formData.message,
           type: 'contact',
+          send: true,
         }),
       })
+
+      if (!autoResponse.ok) {
+        const data = await autoResponse.json()
+        throw new Error(data.error || 'Your message was saved, but the auto-reply could not be sent')
+      }
 
       setSubmitted(true)
       setFormData({
@@ -71,6 +79,8 @@ export function ContactForm() {
       })
       setTimeout(() => setSubmitted(false), 5000)
     } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to submit form'
+      setError(message)
       console.error('[v0] Error submitting form:', error)
     } finally {
       setLoading(false)
@@ -82,6 +92,12 @@ export function ContactForm() {
       {submitted && (
         <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg text-center">
           <p className="text-primary font-semibold">Thanks for reaching out! I&apos;ll get back to you soon.</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-center">
+          <p className="text-destructive font-semibold">{error}</p>
         </div>
       )}
 

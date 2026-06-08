@@ -75,15 +75,7 @@ export function ScrollAnimations() {
       }
 
       [class*="border-"][class*="rounded"] {
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-      }
-
-      .animate-fade-in-up[class*="border-"][class*="rounded"] {
-        transform: translateX(0);
-      }
-
-      [class*="border-"][class*="rounded"] {
-        transform: translateX(-50px);
+        transition: opacity 0.6s ease-out;
       }
     `}</style>
   )

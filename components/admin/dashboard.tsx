@@ -8,6 +8,7 @@ import { LeadsTab } from './tabs/leads-tab'
 import { VisitsTab } from './tabs/visits-tab'
 import { WorkflowsTab } from './tabs/workflows-tab'
 import { JobsTab } from './tabs/jobs-tab'
+import { MessagesTab } from './tabs/messages-tab'
 import { MetricsCard } from './metrics-card'
 
 export function AdminDashboard() {
@@ -105,12 +106,12 @@ export function AdminDashboard() {
       <div className="border-b border-border bg-card/30 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage leads, visitors, workflows, and jobs</p>
+          <p className="text-muted-foreground">Manage leads, messages, visitors, workflows, and jobs</p>
         </div>
       </div>
 
       {/* Metrics */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-hidden">
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertDescription>{error}</AlertDescription>
@@ -124,39 +125,49 @@ export function AdminDashboard() {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="leads" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-4 mb-8">
-            <TabsTrigger value="leads" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Leads</span>
-            </TabsTrigger>
-            <TabsTrigger value="visits" className="flex items-center gap-2">
-              <Eye className="w-4 h-4" />
-              <span className="hidden sm:inline">Visits</span>
-            </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              <span className="hidden sm:inline">Workflows</span>
-            </TabsTrigger>
-            <TabsTrigger value="jobs" className="flex items-center gap-2">
-              <Briefcase className="w-4 h-4" />
-              <span className="hidden sm:inline">Jobs</span>
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="leads" className="w-full min-w-0">
+          <div className="mb-8 w-full overflow-x-auto pb-1">
+            <TabsList className="grid min-w-max grid-cols-5">
+              <TabsTrigger value="leads" className="flex items-center gap-2 px-3">
+                <Users className="w-4 h-4" />
+                <span>Leads</span>
+              </TabsTrigger>
+              <TabsTrigger value="messages" className="flex items-center gap-2 px-3">
+                <Mail className="w-4 h-4" />
+                <span>Messages</span>
+              </TabsTrigger>
+              <TabsTrigger value="visits" className="flex items-center gap-2 px-3">
+                <Eye className="w-4 h-4" />
+                <span>Visits</span>
+              </TabsTrigger>
+              <TabsTrigger value="workflows" className="flex items-center gap-2 px-3">
+                <Zap className="w-4 h-4" />
+                <span>Workflows</span>
+              </TabsTrigger>
+              <TabsTrigger value="jobs" className="flex items-center gap-2 px-3">
+                <Briefcase className="w-4 h-4" />
+                <span>Jobs</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="leads" className="space-y-4">
+          <TabsContent value="leads" className="min-w-0 space-y-4 overflow-hidden">
             <LeadsTab />
           </TabsContent>
 
-          <TabsContent value="visits" className="space-y-4">
+          <TabsContent value="messages" className="min-w-0 space-y-4 overflow-hidden">
+            <MessagesTab />
+          </TabsContent>
+
+          <TabsContent value="visits" className="min-w-0 space-y-4 overflow-hidden">
             <VisitsTab />
           </TabsContent>
 
-          <TabsContent value="workflows" className="space-y-4">
+          <TabsContent value="workflows" className="min-w-0 space-y-4 overflow-hidden">
             <WorkflowsTab />
           </TabsContent>
 
-          <TabsContent value="jobs" className="space-y-4">
+          <TabsContent value="jobs" className="min-w-0 space-y-4 overflow-hidden">
             <JobsTab />
           </TabsContent>
         </Tabs>

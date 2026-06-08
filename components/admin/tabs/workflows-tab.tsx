@@ -33,7 +33,11 @@ export function WorkflowsTab() {
   const [newWorkflow, setNewWorkflow] = useState({
     name: '',
     trigger_type: 'lead_created',
-    actions: [],
+    action_type: 'notification',
+    action_subject: '',
+    action_message: '',
+    action_url: '',
+    action_recipient: '',
   })
 
   useEffect(() => {
@@ -73,8 +77,19 @@ export function WorkflowsTab() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...newWorkflow,
-          actions: newWorkflow.actions.length > 0 ? newWorkflow.actions : [{ type: 'notification', config: {} }],
+          name: newWorkflow.name,
+          trigger_type: newWorkflow.trigger_type,
+          actions: [
+            {
+              type: newWorkflow.action_type,
+              config: {
+                subject: newWorkflow.action_subject || undefined,
+                message: newWorkflow.action_message || undefined,
+                url: newWorkflow.action_url || undefined,
+                recipient: newWorkflow.action_recipient || undefined,
+              },
+            },
+          ],
         }),
       })
       const data = await res.json()
@@ -83,7 +98,15 @@ export function WorkflowsTab() {
         throw new Error(data.error || 'Failed to create workflow')
       }
 
-      setNewWorkflow({ name: '', trigger_type: 'lead_created', actions: [] })
+      setNewWorkflow({
+        name: '',
+        trigger_type: 'lead_created',
+        action_type: 'notification',
+        action_subject: '',
+        action_message: '',
+        action_url: '',
+        action_recipient: '',
+      })
       setShowCreate(false)
       setSuccess('Workflow created successfully.')
       fetchWorkflows()
@@ -177,7 +200,7 @@ export function WorkflowsTab() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
@@ -225,6 +248,59 @@ export function WorkflowsTab() {
               </select>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium mb-2">Action</label>
+              <select
+                value={newWorkflow.action_type}
+                onChange={(e) => setNewWorkflow({ ...newWorkflow, action_type: e.target.value })}
+                className="w-full px-3 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:border-primary"
+              >
+                <option value="notification">Log Notification</option>
+                <option value="send_email">Send Email Log</option>
+                <option value="webhook">Trigger Webhook</option>
+              </select>
+            </div>
+
+            {(newWorkflow.action_type === 'notification' || newWorkflow.action_type === 'send_email') && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Subject</label>
+                  <Input
+                    value={newWorkflow.action_subject}
+                    onChange={(e) => setNewWorkflow({ ...newWorkflow, action_subject: e.target.value })}
+                    placeholder="New lead notification"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Recipient</label>
+                  <Input
+                    value={newWorkflow.action_recipient}
+                    onChange={(e) => setNewWorkflow({ ...newWorkflow, action_recipient: e.target.value })}
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-2">Message</label>
+                  <Input
+                    value={newWorkflow.action_message}
+                    onChange={(e) => setNewWorkflow({ ...newWorkflow, action_message: e.target.value })}
+                    placeholder="A new lead was created"
+                  />
+                </div>
+              </div>
+            )}
+
+            {newWorkflow.action_type === 'webhook' && (
+              <div>
+                <label className="block text-sm font-medium mb-2">Webhook URL</label>
+                <Input
+                  value={newWorkflow.action_url}
+                  onChange={(e) => setNewWorkflow({ ...newWorkflow, action_url: e.target.value })}
+                  placeholder="https://example.com/webhook"
+                />
+              </div>
+            )}
+
             <div className="flex gap-2">
               <Button type="submit" className="flex-1">
                 Create Workflow
@@ -242,7 +318,7 @@ export function WorkflowsTab() {
         </Card>
       )}
 
-      <Card className="border border-border overflow-hidden">
+      <Card className="min-w-0 overflow-hidden border border-border">
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">

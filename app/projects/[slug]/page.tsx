@@ -4,6 +4,27 @@ import { ExternalLink, Github, ArrowLeft, ArrowRight, Code2 } from 'lucide-react
 import { Button } from '@/components/ui/button'
 
 const projects: Record<string, any> = {
+  'gift-card-platform': {
+    title: 'Gift Card Website',
+    category: 'web-development',
+    description: 'Full-stack gift card solution with real-time inventory',
+    fullDescription: 'A comprehensive gift card platform built with Next.js and PostgreSQL. Features include product management, real-time inventory tracking, integrated payment processing with Stripe, user authentication, and order management.',
+    image: '/project_one.png',
+    technologies: ['Next.js', 'PostgreSQL', 'Stripe', 'Tailwind CSS', 'TypeScript', 'Vercel'],
+    live_url: 'https://spin-object-95371433.figma.site/',
+    github_url: '#',
+    featured: true,
+    challenge: 'Create a clean, reliable gift card platform that makes buying and managing cards simple for customers.',
+    solution: 'Built a full-stack experience with product management, secure checkout structure, inventory tracking, and a polished customer-facing interface.',
+    results: [
+      'Clear product browsing flow',
+      'Real-time inventory-ready structure',
+      'Secure payment integration path',
+      'Admin-friendly order management',
+    ],
+    testimonial: 'The platform made our gift card sales look professional and easier to manage.',
+    clientName: 'Gift Card Client',
+  },
   'ecommerce-platform': {
     title: 'E-Commerce Platform',
     category: 'web-development',
@@ -24,6 +45,48 @@ const projects: Record<string, any> = {
     ],
     testimonial: 'This platform transformed our online sales. The performance is incredible and our customers love the experience.',
     clientName: 'E-Commerce Client',
+  },
+  'fintech-app': {
+    title: 'Fintech App',
+    category: 'web-development',
+    description: 'React and mobile-ready finance platform with a polished product experience',
+    fullDescription: 'A modern fintech application built with React, Expo-ready architecture, Express, Neon, Redux, and TypeScript. The project focuses on a clean user experience, reliable data flow, and a responsive interface for financial workflows.',
+    image: '/pharste_project.png',
+    technologies: ['React', 'Expo', 'Express', 'Neon', 'Redux', 'TypeScript'],
+    live_url: 'https://pharste-site.vercel.app',
+    github_url: '#',
+    featured: true,
+    challenge: 'Create a trustworthy fintech experience that feels fast, clear, and easy to use across devices.',
+    solution: 'Built a responsive React interface with typed state management, backend-ready Express structure, and database support through Neon.',
+    results: [
+      'Clean fintech landing experience',
+      'Responsive web layout',
+      'Backend-ready architecture',
+      'Scalable TypeScript foundation',
+    ],
+    testimonial: 'The fintech product now feels polished, credible, and ready to present.',
+    clientName: 'Fintech Client',
+  },
+  'cbt-web-app': {
+    title: 'CBT Web App',
+    category: 'web-development',
+    description: 'Therapy-focused web app with guided CBT tools',
+    fullDescription: 'A CBT-focused web application built with React and Express. It supports mental health and wellness workflows with guided exercises, mood tracking concepts, secure user flow foundations, and a clean interface.',
+    image: '/cbt_project.png',
+    technologies: ['React', 'Express', 'MongoDB', 'Redux', 'TypeScript'],
+    live_url: 'https://fillops-edu-tech.vercel.app/',
+    github_url: '#',
+    featured: true,
+    challenge: 'Design a calm, practical CBT experience that helps users access wellness tools without friction.',
+    solution: 'Created a focused web app structure with guided tools, clear navigation, and a scalable React plus Express foundation.',
+    results: [
+      'CBT tool-focused interface',
+      'Clean user experience',
+      'Full-stack app foundation',
+      'Live deployed project',
+    ],
+    testimonial: 'The app communicates the product clearly and makes the CBT tools easy to explore.',
+    clientName: 'CBT App Client',
   },
   'ai-chat-dashboard': {
     title: 'AI Chat Dashboard',
@@ -66,6 +129,69 @@ const projects: Record<string, any> = {
     ],
     testimonial: 'This automation suite has been a game-changer for our business. The time savings are incredible.',
     clientName: 'Automation Client',
+  },
+  'portfolio-site': {
+    title: 'Portfolio Website',
+    category: 'web-development',
+    description: 'Modern portfolio with analytics and CMS',
+    fullDescription: 'Elegant portfolio website featuring project showcases, service listings, automated lead capture, and integrated analytics. Built with Next.js and optimized for performance and SEO.',
+    image: 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=1200&q=80',
+    technologies: ['Next.js', 'Supabase', 'Tailwind CSS', 'TypeScript', 'Vercel'],
+    live_url: '#',
+    github_url: '#',
+    featured: false,
+    challenge: 'Build a portfolio that does more than look good: it also captures leads and shows useful admin insights.',
+    solution: 'Combined a fast marketing site with Supabase-backed lead capture, visit tracking, and an admin dashboard.',
+    results: [
+      'Professional project showcase',
+      'Lead capture workflow',
+      'Visit tracking support',
+      'SEO-friendly pages',
+    ],
+    testimonial: 'The site finally feels like a business tool, not just an online brochure.',
+    clientName: 'Portfolio Client',
+  },
+  'saas-platform': {
+    title: 'SaaS Management Platform',
+    category: 'web-development',
+    description: 'Multi-tenant SaaS with subscription management',
+    fullDescription: 'Enterprise-grade SaaS platform with multi-tenancy, subscription management, usage analytics, and team collaboration features. Includes Stripe integration for billing and customer portal.',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80',
+    technologies: ['Next.js', 'PostgreSQL', 'Stripe', 'Redis', 'Docker'],
+    live_url: '#',
+    github_url: '#',
+    featured: false,
+    challenge: 'Design a scalable SaaS foundation that can support multiple customers, teams, and billing states.',
+    solution: 'Structured the app around tenant-aware data, subscription billing, role-based workflows, and performance-focused infrastructure.',
+    results: [
+      'Multi-tenant architecture',
+      'Subscription-ready billing',
+      'Team collaboration flows',
+      'Usage analytics support',
+    ],
+    testimonial: 'This gave us a strong foundation to launch and grow our SaaS product.',
+    clientName: 'SaaS Client',
+  },
+  'mobile-app': {
+    title: 'Cross-Platform Mobile App',
+    category: 'web-development',
+    description: 'React Native app with offline capabilities',
+    fullDescription: 'Cross-platform mobile application built with React Native and Expo. Features offline-first architecture, push notifications, real-time sync, and native module integration for iOS and Android platforms.',
+    image: 'https://images.unsplash.com/photo-1512941691920-25d18d400558?w=1200&q=80',
+    technologies: ['React Native', 'Expo', 'Firebase', 'Redux', 'TypeScript'],
+    live_url: '#',
+    github_url: '#',
+    featured: false,
+    challenge: 'Deliver a mobile app experience that works smoothly across iOS and Android, even with unreliable connectivity.',
+    solution: 'Built an offline-first React Native app with sync flows, push notification support, and shared business logic.',
+    results: [
+      'iOS and Android support',
+      'Offline-first usage',
+      'Push notification workflow',
+      'Real-time sync foundation',
+    ],
+    testimonial: 'The mobile experience is smooth, practical, and ready for real users.',
+    clientName: 'Mobile App Client',
   },
 }
 
@@ -172,7 +298,6 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                        onClick={(e) => e.preventDefault()}
                       >
                         <ExternalLink size={20} /> View Live
                       </a>
@@ -183,7 +308,6 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                        onClick={(e) => e.preventDefault()}
                       >
                         <Github size={20} /> View Code
                       </a>

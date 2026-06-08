@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 import { supabaseServer } from '@/lib/supabase/server'
 import { getEmailTemplate } from '@/lib/email-templates'
+
+const resendApiKey = process.env.RESEND_API_KEY
+const resendFromEmail = process.env.RESEND_FROM_EMAIL || 'HENRY.CODE <onboarding@resend.dev>'
+const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +22,37 @@ export async function POST(request: NextRequest) {
       ? { subject: data.subject, html: data.message }
       : getEmailTemplate(data.type || 'contact', data)
 
+    let status = 'logged'
+    let providerMessageId: string | undefined
+
+    if (data.send === true) {
+      if (!resend) {
+        return NextResponse.json(
+          { error: 'Resend is not configured' },
+          { status: 500 }
+        )
+      }
+
+      const { data: resendData, error: resendError } = await resend.emails.send({
+        from: data.from || resendFromEmail,
+        to: data.email,
+        subject: data.subject || template.subject,
+        html: template.html,
+        replyTo: data.replyTo,
+      })
+
+      if (resendError) {
+        console.error('[v0] Resend error:', resendError)
+        return NextResponse.json(
+          { error: resendError.message || 'Failed to send email' },
+          { status: 500 }
+        )
+      }
+
+      status = 'sent'
+      providerMessageId = resendData?.id
+    }
+
     const { data: message, error } = await supabaseServer
       .from('messages')
       .insert({
@@ -24,9 +60,11 @@ export async function POST(request: NextRequest) {
         from_name: 'HENRY.CODE',
         to_email: data.email,
         subject: data.subject || template.subject,
-        body: template.html,
+        body: providerMessageId
+          ? `${template.html}\n\n<!-- Resend ID: ${providerMessageId} -->`
+          : template.html,
         message_type: data.type || 'contact',
-        status: 'logged',
+        status,
       })
       .select()
 
@@ -55,7 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         success: true, 
-        message: 'Auto-response logged successfully',
+        message: data.send === true ? 'Email sent successfully' : 'Auto-response logged successfully',
         responseId: message?.[0]?.id
       },
       { status: 201 }

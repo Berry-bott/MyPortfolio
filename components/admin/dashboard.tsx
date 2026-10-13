@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Mail, Users, Eye, TrendingUp, Zap, Briefcase } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Mail, Users, Eye, TrendingUp, Zap, Briefcase, LogOut } from 'lucide-react'
 import { LeadsTab } from './tabs/leads-tab'
 import { VisitsTab } from './tabs/visits-tab'
 import { WorkflowsTab } from './tabs/workflows-tab'
@@ -12,6 +14,7 @@ import { MessagesTab } from './tabs/messages-tab'
 import { MetricsCard } from './metrics-card'
 
 export function AdminDashboard() {
+  const router = useRouter()
   const [metrics, setMetrics] = useState({
     totalLeads: 0,
     totalVisits: 0,
@@ -69,6 +72,15 @@ export function AdminDashboard() {
     return () => clearInterval(interval)
   }, [])
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/login', { method: 'DELETE' })
+    } finally {
+      router.replace('/admin/login')
+      router.refresh()
+    }
+  }
+
   const statsCards = [
     {
       title: 'Total Leads',
@@ -104,9 +116,15 @@ export function AdminDashboard() {
     <div className="w-full">
       {/* Header */}
       <div className="border-b border-border bg-card/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage leads, messages, visitors, workflows, and jobs</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Manage leads, messages, visitors, workflows, and jobs</p>
+          </div>
+          <Button variant="outline" onClick={handleLogout} className="shrink-0">
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Sign Out</span>
+          </Button>
         </div>
       </div>
 

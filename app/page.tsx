@@ -72,23 +72,27 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {[
               {
-                title: 'E-Commerce Platform',
-                description: 'Next.js full-stack platform with real-time inventory and payment integration',
+                title: 'Edgloe',
+                slug: 'edgloe',
+                description: 'AI product photos and marketing copy that turn a phone photo into a complete selling package',
+                tech: ['React', 'AI', 'PWA'],
+              },
+              {
+                title: "Lovin's AI",
+                slug: 'lovins-ai',
+                description: 'No-code automation SaaS for WhatsApp, Email, Instagram, Slack and more',
+                tech: ['Next.js', 'AI', 'Automation'],
+              },
+              {
+                title: 'Gift Card Website',
+                slug: 'gift-card-platform',
+                description: 'Full-stack gift card platform with real-time inventory and payment integration',
                 tech: ['Next.js', 'PostgreSQL', 'Stripe'],
               },
-              {
-                title: 'AI Chat Dashboard',
-                description: 'Interactive dashboard with AI-powered analytics and real-time data visualization',
-                tech: ['React', 'AI SDK', 'Recharts'],
-              },
-              {
-                title: 'Automation Suite',
-                description: 'Intelligent automation tools for lead capture, email responses, and job tracking',
-                tech: ['Node.js', 'Supabase', 'Webhooks'],
-              },
-            ].map((project, index) => (
-              <div
-                key={index}
+            ].map((project) => (
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}`}
                 className="bg-background border border-border rounded-lg p-6 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10"
               >
                 <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
@@ -100,7 +104,7 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

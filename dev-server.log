@@ -1,0 +1,31 @@
+
+> my-project@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.59.164:3000
+- Environments: .env.local
+✓ Ready in 2.4s
+Creating turbopack project { dir: 'C:\\Users\\USER\\Desktop\\my-portfolio', testMode: true }
+
+○ Compiling / ...
+ GET / 200 in 34.9s (next.js: 28.9s, application-code: 6.0s)
+ GET / 200 in 368ms (next.js: 18ms, application-code: 350ms)
+○ Compiling /projects ...
+ GET /projects 200 in 9.9s (next.js: 8.4s, application-code: 1477ms)
+○ Compiling /api/visits ...
+[v0] Visit tracked: {
+  page: '/',
+  referrer: 'direct',
+  duration: 51,
+  timestamp: '2026-06-08T16:45:49.870Z'
+}
+ POST /api/visits 200 in 6.6s (next.js: 4.3s, application-code: 2.4s)
+ POST /api/visits 200 in 73ms (next.js: 17ms, application-code: 56ms)
+[v0] Visit tracked: {
+  page: '/projects',
+  referrer: 'direct',
+  duration: 517,
+  timestamp: '2026-06-08T16:54:22.503Z'
+}

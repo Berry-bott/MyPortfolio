@@ -6,19 +6,36 @@ import { ExternalLink, Github, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const projects = [
-  {
-    id: 'gift-card-platform',
-    title: 'Gift Card Website',
-    slug: 'gift-card-platform',
-    category: 'web-development',
-    short_description: 'Full-stack gift card solution with real-time inventory',
-    description: 'A comprehensive gift card platform built with Next.js and PostgreSQL. Features include product management, real-time inventory tracking, integrated payment processing with Stripe, user authentication, and order management.',
-    image: '/project_one.png',
-    technologies: ['Next.js', 'PostgreSQL', 'Stripe', 'Tailwind CSS', 'TypeScript'],
-    live_url: 'https://spin-object-95371433.figma.site/',
+
+      {
+    id: 'oceanic-tools-monger',
+    title: 'Oceanic Tools Monger',
+    slug: 'oceanic-tools-monger',
+    category: 'e-commerce',
+    short_description: 'Modern e-commerce platform for industrial power tools, heavy machinery, construction equipment and hardware',
+    description: "Oceanic Tools Monger is an industrial e-commerce platform designed to make sourcing genuine power tools, construction equipment, workshop machinery, and safety supplies easier. It features a comprehensive product catalogue, category-based shopping, product discovery, shopping cart, secure online payments, customer accounts, order tracking, and nationwide delivery information, providing customers with a seamless online equipment shopping experience.",
+    image: '/projects/oceanic-tools-monger.png',
+    technologies: ['Next.js','Express js','Paystack',  'TypeScript', 'Tailwind CSS', 'React','Neon db'],
+    live_url: 'https://brikoh.com/',
+    live_url: 'https://www.oceanictoolsmonger.com/',
     github_url: '#',
     featured: true,
   },
+
+  {
+    id: 'brikoh',
+    title: 'Brikoh',
+    slug: 'brikoh',
+    category: 'e-commerce',
+    short_description: 'Modern all-in-one commerce platform designed to simplify online business operations and digital selling',
+    description: "Brikoh is an all-in-one commerce platform designed to help businesses manage and grow their online operations. It provides a digital commerce experience that brings product discovery, online shopping, and business operations together in one platform, helping businesses reach customers and simplify the selling process.",
+    image: '/projects/brikoh.png',
+   technologies: ['Next.js','Express js',  'TypeScript', 'Tailwind CSS', 'React','Neon db'],
+    live_url: 'https://brikoh.com/',
+    github_url: '#',
+    featured: true,
+  },
+
     {
     id: 'fintech',
     title: 'Fintech App',
@@ -26,7 +43,7 @@ const projects = [
     category: 'web-development',
     short_description: 'React Native app with offline capabilities',
     description: 'A cross-platform application built with React, React Native and Expo. Features offline-first architecture, push notifications, real-time sync, and native module integration for iOS and Android platforms.',
-    image: '/pharste_project.png',
+    image: 'projects/pharste_project.png',
     technologies: ['React', 'Expo','Express', 'neon', 'Redux', 'TypeScript'],
     live_url: 'https://pharste-site.vercel.app',
     github_url: '#',
@@ -39,25 +56,13 @@ const projects = [
     category: 'web-development',
     short_description: 'React Native app with offline capabilities',
     description: 'cbt web app is a cross-platform mobile application built with React and Express. It offers cognitive behavioral therapy (CBT) tools, mood tracking, and guided exercises. The app features offline capabilities, secure user authentication, and a clean, intuitive interface designed to support mental health and wellness.',
-    image: '/cbt_project.png',
-    technologies: ['React', 'Express', 'MongoDB', 'Redux', 'TypeScript'],
+    image: 'projects/cbt_project.png',
+    technologies: ['React', 'Express', 'vps storage', 'Redux', 'TypeScript'],
     live_url: 'https://fillops-edu-tech.vercel.app/',
     github_url: '#',
     featured: true,
   },
-  {
-    id: 'hotel-site',
-    title: 'Hotel Booking Website',
-    slug: 'hotel-site',
-    category: 'web-development',
-    short_description: 'Modern hotel booking platform with analytics and CMS',
-    description: 'Elegant hotel booking website featuring room showcases, service listings, automated booking management, and integrated analytics. Built with Next.js and optimized for performance and SEO.',
-    image: '/hotel_project.png',
-    technologies: ['Next.js', 'Supabase', 'Tailwind CSS', 'TypeScript', 'Vercel'],
-    live_url: '#',
-    github_url: '#',
-    featured: false,
-  },
+ 
   {
     id: 'edgloe',
     title: 'Edgloe',
@@ -108,6 +113,32 @@ const projects = [
     technologies: ['React', 'Node.js', 'Business Tools', 'Dashboard'],
     live_url: 'https://business.filloptech.com/',
     github_url: '#',
+    featured: true,
+  },
+   {
+    id: 'hotel-site',
+    title: 'Hotel Booking Website',
+    slug: 'hotel-site',
+    category: 'web-development',
+    short_description: 'Modern hotel booking platform with analytics and CMS',
+    description: 'Elegant hotel booking website featuring room showcases, service listings, automated booking management, and integrated analytics. Built with Next.js and optimized for performance and SEO.',
+    image: 'projects/hotel_project.png',
+    technologies: ['Next.js', 'Supabase', 'Tailwind CSS', 'TypeScript', 'Vercel'],
+    live_url: '#',
+    github_url: '#',
+    featured: false,
+  },
+   {
+    id: 'gift-card-platform',
+    title: 'Gift Card Website',
+    slug: 'gift-card-platform',
+    category: 'web-development',
+    short_description: 'Full-stack gift card solution with real-time inventory',
+    description: 'A comprehensive gift card platform built with Next.js and PostgreSQL. Features include product management, real-time inventory tracking, integrated payment processing with Stripe, user authentication, and order management.',
+    image: 'projects/project_one.png',
+    technologies: ['Next.js', 'PostgreSQL', 'Stripe', 'Tailwind CSS', 'TypeScript'],
+    live_url: 'https://spin-object-95371433.figma.site/',
+    github_url: '#',
     featured: false,
   },
  
@@ -147,88 +178,104 @@ export function ProjectsList() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProjects.map(project => (
-          <Link
-            key={project.id}
-            href={`/projects/${project.slug}`}
-            className="group bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+        
+{/* Projects Grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  {filteredProjects.map(project => (
+    <div
+      key={project.id}
+      className="group bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+    >
+      {/* Project Image and Information */}
+      <Link
+        href={`/projects/${project.slug}`}
+        className="block"
+      >
+        <div className="relative overflow-hidden h-48 bg-gradient-to-br from-primary to-accent">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+
+          {project.featured && (
+            <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
+              Featured
+            </div>
+          )}
+        </div>
+
+        <div className="p-6">
+          <div className="mb-3">
+            <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+              {project.category === 'web-development'
+                ? 'Web Development'
+                : project.category === 'e-commerce'
+                  ? 'E-commerce'
+                  : 'AI Automation'}
+            </span>
+          </div>
+
+          <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+            {project.title}
+          </h3>
+
+          <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+            {project.short_description}
+          </p>
+
+          {/* Technologies */}
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.slice(0, 3).map((tech, idx) => (
+              <span
+                key={idx}
+                className="text-xs bg-primary/10 text-primary px-2 py-1 rounded"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Link>
+
+      {/* External Links - Outside Next.js Link */}
+      <div className="flex gap-2 px-6 pb-6 pt-4 border-t border-border">
+        {project.live_url !== '#' && (
+          <a
+            href={project.live_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
           >
-            {/* Project Image */}
-            <div className="relative overflow-hidden h-48 bg-gradient-to-br from-primary to-accent">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              {project.featured && (
-                <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
-                  Featured
-                </div>
-              )}
-            </div>
+            <ExternalLink size={16} />
+            Live
+          </a>
+        )}
 
-            {/* Project Info */}
-            <div className="p-6">
-              <div className="mb-3">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                  {project.category === 'web-development' ? 'Web Development' : 'AI Automation'}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                {project.title}
-              </h3>
-              <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                {project.short_description}
-              </p>
+        {project.github_url !== '#' && (
+          <a
+            href={project.github_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+          >
+            <Github size={16} />
+            Code
+          </a>
+        )}
 
-              {/* Technologies */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.technologies.slice(0, 3).map((tech, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs bg-primary/10 text-primary px-2 py-1 rounded"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* Links */}
-              <div className="flex gap-2 pt-4 border-t border-border">
-                {project.live_url !== '#' && (
-                  <a
-                    href={project.live_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <ExternalLink size={16} />
-                    Live
-                  </a>
-                )}
-                {project.github_url !== '#' && (
-                  <a
-                    href={project.github_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <Github size={16}/>
-                    Code
-                  </a>
-                )}
-                <span className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary group-hover:text-primary/80 transition-colors">
-                  <ArrowRight size={16} />
-                  Details
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+        <Link
+          href={`/projects/${project.slug}`}
+          className="flex-1 flex items-center justify-center gap-2 text-sm font-semibold text-primary group-hover:text-primary/80 transition-colors"
+        >
+          <ArrowRight size={16} />
+          Details
+        </Link>
       </div>
+    </div>
+  ))}
+</div>
+
     </>
   )
 }
